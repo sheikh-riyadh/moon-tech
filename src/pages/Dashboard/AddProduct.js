@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useAddProductMutation } from "../../app/features/api/apiSlice";
+import { toast } from "react-hot-toast";
+
 
 const AddProduct = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit,reset} = useForm();
+  const [addProduct, {isLoading,isSuccess}]= useAddProductMutation()
+
+  useEffect(()=>{
+    if(isSuccess){
+      toast.success("Product added successfully",{id:"addProducts"})
+      reset()
+      return
+    }
+  },[isLoading, isSuccess, reset])
 
   const submit = (data) => {
     const product = {
@@ -18,9 +30,9 @@ const AddProduct = () => {
       ],
       spec: [],
     };
-
-    console.log(product);
+    addProduct(product)
   };
+
 
   return (
     <div className='flex justify-center items-center h-full '>
